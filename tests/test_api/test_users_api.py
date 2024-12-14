@@ -167,6 +167,53 @@ async def test_update_user_linkedin(async_client, admin_user, admin_token):
     assert response.json()["linkedin_profile_url"] == updated_data["linkedin_profile_url"]
 
 @pytest.mark.asyncio
+async def test_update_user_profile_fields(async_client, verified_user, user_token):
+    """Test updating multiple profile fields at once"""
+    profile_data = {
+        "first_name": "John",
+        "last_name": "Smith",
+        "bio": "Software Developer with 5 years experience",
+        "linkedin_profile_url": "https://linkedin.com/in/johnsmith",
+        "github_profile_url": "https://github.com/johnsmith"
+    }
+    headers = {"Authorization": f"Bearer {user_token}"}
+    response = await async_client.put(f"/users/{verified_user.id}/profile", json=profile_data, headers=headers)
+    assert response.status_code == 200
+    data = response.json()
+    assert data["first_name"] == profile_data["first_name"]
+    assert data["last_name"] == profile_data["last_name"]
+    assert data["bio"] == profile_data["bio"]
+    assert data["linkedin_profile_url"] == profile_data["linkedin_profile_url"]
+    assert data["github_profile_url"] == profile_data["github_profile_url"]
+
+@pytest.mark.asyncio
+async def test_update_user_profile_invalid_urls(async_client, verified_user, user_token):
+    """Test validation of profile URLs"""
+    profile_data = {
+        "linkedin_profile_url": "not-a-url",
+        "github_profile_url": "also-not-a-url"
+    }
+    headers = {"Authorization": f"Bearer {user_token}"}
+    response = await async_client.put(f"/users/{verified_user.id}/profile", json=profile_data, headers=headers)
+    assert response.status_code == 422
+
+@pytest.mark.asyncio
+async def test_update_user_profile_unauthorized(async_client, verified_user):
+    """Test updating profile without authentication"""
+    profile_data = {"first_name": "John"}
+    response = await async_client.put(f"/users/{verified_user.id}/profile", json=profile_data)
+    assert response.status_code == 401
+
+@pytest.mark.asyncio
+async def test_update_other_user_profile_forbidden(async_client, verified_user, user_token):
+    """Test user cannot update another user's profile"""
+    other_user_id = uuid4()
+    profile_data = {"first_name": "John"}
+    headers = {"Authorization": f"Bearer {user_token}"}
+    response = await async_client.put(f"/users/{other_user_id}/profile", json=profile_data, headers=headers)
+    assert response.status_code == 403
+
+@pytest.mark.asyncio
 async def test_list_users_as_admin(async_client, admin_token):
     response = await async_client.get(
         "/users/",

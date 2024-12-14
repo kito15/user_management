@@ -190,6 +190,39 @@ class UserService:
         return count
     
     @classmethod
+    async def update_profile(cls, session: AsyncSession, user_id: UUID, profile_data: Dict[str, str], email_service: EmailService) -> Optional[User]:
+        """Update user profile and send notification email"""
+        try:
+            user = await cls.get_by_id(session, user_id)
+            if not user:
+                return None
+
+            # Update user fields
+            for field, value in profile_data.items():
+                setattr(user, field, value)
+            
+            session.add(user)
+            await session.commit()
+            await session.refresh(user)
+
+            # Send profile update notification
+            await email_service.send_user_email({
+                "name": user.first_name or user.nickname,
+                "first_name": user.first_name or "Not provided",
+                "last_name": user.last_name or "Not provided",
+                "bio": user.bio or "Not provided",
+                "linkedin_profile_url": user.linkedin_profile_url or "Not provided",
+                "github_profile_url": user.github_profile_url or "Not provided",
+                "email": user.email
+            }, 'profile_updated')
+
+            return user
+        except Exception as e:
+            logger.error(f"Error updating user profile: {e}")
+            await session.rollback()
+            return None
+
+    @classmethod
     async def unlock_user_account(cls, session: AsyncSession, user_id: UUID) -> bool:
         user = await cls.get_by_id(session, user_id)
         if user and user.is_locked:

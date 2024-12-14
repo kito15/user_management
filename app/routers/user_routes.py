@@ -25,6 +25,7 @@ from fastapi import APIRouter, Depends, HTTPException, Response, status, Request
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.dependencies import get_current_user, get_db, get_email_service, require_role
+from app.schemas.user_schemas import UserProfileUpdate
 from app.schemas.pagination_schema import EnhancedPagination
 from app.schemas.token_schema import TokenResponse
 from app.schemas.user_schemas import LoginRequest, UserBase, UserCreate, UserListResponse, UserResponse, UserUpdate
@@ -78,7 +79,7 @@ async def get_user(user_id: UUID, request: Request, db: AsyncSession = Depends(g
 # This approach not only ensures that the API is secure and efficient but also promotes a better client
 # experience by adhering to REST principles and providing self-discoverable operations.
 
-@router.put("/users/{user_id}", response_model=UserResponse, name="update_user", tags=["User Management Requires (Admin or Manager Roles)"])
+@router.put("/users/{user_id}", response_model=UserResponse, name="update_user", tags=["User Management"])
 async def update_user(user_id: UUID, user_update: UserUpdate, request: Request, db: AsyncSession = Depends(get_db), token: str = Depends(oauth2_scheme), current_user: dict = Depends(require_role(["ADMIN", "MANAGER"]))):
     """
     Update user information.
@@ -120,6 +121,47 @@ async def delete_user(user_id: UUID, db: AsyncSession = Depends(get_db), token: 
     if not success:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
     return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+@router.put("/users/{user_id}/profile", response_model=UserResponse, tags=["User Profile Management"])
+async def update_user_profile(
+    user_id: UUID,
+    profile_update: UserProfileUpdate,
+    request: Request,
+    db: AsyncSession = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+    email_service: EmailService = Depends(get_email_service)
+):
+    """
+    Update user profile information. Users can only update their own profiles.
+    """
+    if str(user_id) != current_user["user_id"]:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Cannot update another user's profile"
+        )
+    
+    user_data = profile_update.model_dump(exclude_unset=True)
+    updated_user = await UserService.update_profile(db, user_id, user_data, email_service)
+    
+    if not updated_user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+    
+    return UserResponse.model_construct(
+        id=updated_user.id,
+        nickname=updated_user.nickname,
+        email=updated_user.email,
+        first_name=updated_user.first_name,
+        last_name=updated_user.last_name,
+        bio=updated_user.bio,
+        profile_picture_url=updated_user.profile_picture_url,
+        github_profile_url=updated_user.github_profile_url,
+        linkedin_profile_url=updated_user.linkedin_profile_url,
+        role=updated_user.role,
+        last_login_at=updated_user.last_login_at,
+        created_at=updated_user.created_at,
+        updated_at=updated_user.updated_at,
+        links=create_user_links(updated_user.id, request)
+    )
 
 
 
