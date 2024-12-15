@@ -7,6 +7,7 @@ import uuid
 import re
 from app.models.user_model import UserRole
 from app.utils.nickname_gen import generate_nickname
+from app.utils.sanitizer import sanitize_html
 
 
 def validate_url(url: Optional[str]) -> Optional[str]:
@@ -50,6 +51,12 @@ class UserProfileUpdate(BaseModel):
             raise ValueError("At least one field must be provided for update")
         return values
 
+    @validator('bio')
+    def sanitize_bio(cls, v):
+        if v is not None:
+            return sanitize_html(v)
+        return v
+
 class UserUpdate(UserBase):
     email: Optional[EmailStr] = Field(None, example="john.doe@example.com")
     nickname: Optional[str] = Field(None, min_length=3, pattern=r'^[\w-]+$', example="john_doe123")
@@ -67,6 +74,12 @@ class UserUpdate(UserBase):
         if not any(values.values()):
             raise ValueError("At least one field must be provided for update")
         return values
+
+    @validator('bio')
+    def sanitize_bio(cls, v):
+        if v is not None:
+            return sanitize_html(v)
+        return v
 
 class UserResponse(UserBase):
     id: uuid.UUID = Field(..., example=uuid.uuid4())
