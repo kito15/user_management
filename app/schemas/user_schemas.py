@@ -9,13 +9,30 @@ from app.models.user_model import UserRole
 from app.utils.nickname_gen import generate_nickname
 from app.utils.sanitizer import sanitize_html
 
-
 def validate_url(url: Optional[str]) -> Optional[str]:
     if url is None:
         return url
     url_regex = r'^https?:\/\/[^\s/$.?#].[^\s]*$'
     if not re.match(url_regex, url):
         raise ValueError('Invalid URL format')
+    return url
+
+def validate_linkedin_url(url: Optional[str]) -> Optional[str]:
+    """Validate LinkedIn profile URL format"""
+    if url is None:
+        return url
+    pattern = r'^https://(www\.)?linkedin\.com/in/[a-zA-Z0-9_-]+/?$'
+    if not re.match(pattern, url):
+        raise ValueError('URL is not a valid LinkedIn profile URL')
+    return url
+
+def validate_github_url(url: Optional[str]) -> Optional[str]:
+    """Validate GitHub profile URL format"""
+    if url is None:
+        return url
+    pattern = r'^https://(www\.)?github\.com/[a-zA-Z0-9_-]+/?$'
+    if not re.match(pattern, url):
+        raise ValueError('URL is not a valid GitHub profile URL')
     return url
 
 class UserBase(BaseModel):
@@ -42,8 +59,14 @@ class UserProfileUpdate(BaseModel):
     first_name: Optional[str] = Field(None, min_length=2, max_length=100)
     last_name: Optional[str] = Field(None, min_length=2, max_length=100)
     bio: Optional[str] = Field(None, max_length=500)
-    linkedin_profile_url: Optional[HttpUrl] = None
-    github_profile_url: Optional[HttpUrl] = None
+    linkedin_profile_url: Optional[str] = Field(None, 
+        example="https://linkedin.com/in/johndoe",
+        description="LinkedIn profile URL"
+    )
+    github_profile_url: Optional[str] = Field(None, 
+        example="https://github.com/johndoe",
+        description="GitHub profile URL"
+    )
 
     @root_validator(pre=True)
     def check_at_least_one_value(cls, values):
@@ -56,6 +79,14 @@ class UserProfileUpdate(BaseModel):
         if v is not None:
             return sanitize_html(v)
         return v
+
+    @validator('linkedin_profile_url')
+    def validate_linkedin(cls, v):
+        return validate_linkedin_url(v)
+
+    @validator('github_profile_url')
+    def validate_github(cls, v):
+        return validate_github_url(v)
 
 class UserUpdate(UserBase):
     email: Optional[EmailStr] = Field(None, example="john.doe@example.com")
@@ -80,6 +111,14 @@ class UserUpdate(UserBase):
         if v is not None:
             return sanitize_html(v)
         return v
+
+    @validator('linkedin_profile_url')
+    def validate_linkedin(cls, v):
+        return validate_linkedin_url(v)
+
+    @validator('github_profile_url')
+    def validate_github(cls, v):
+        return validate_github_url(v)
 
 class UserResponse(UserBase):
     id: uuid.UUID = Field(..., example=uuid.uuid4())
