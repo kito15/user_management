@@ -80,17 +80,61 @@ async def get_user(user_id: UUID, request: Request, db: AsyncSession = Depends(g
 # experience by adhering to REST principles and providing self-discoverable operations.
 
 @router.put("/users/{user_id}", response_model=UserResponse, name="update_user", tags=["User Management"])
-async def update_user(user_id: UUID, user_update: UserUpdate, request: Request, db: AsyncSession = Depends(get_db), token: str = Depends(oauth2_scheme), current_user: dict = Depends(require_role(["ADMIN", "MANAGER"]))):
+async def update_user(
+    user_id: UUID,
+    user_update: UserUpdate,
+    request: Request,
+    db: AsyncSession = Depends(get_db),
+    token: str = Depends(oauth2_scheme),
+    current_user: dict = Depends(get_current_user),
+    email_service: EmailService = Depends(get_email_service)
+):
     """
     Update user information.
 
-    - **user_id**: UUID of the user to update.
-    - **user_update**: UserUpdate model with updated user information.
+    - **user_id**: UUID of the user to update
+    - **user_update**: UserUpdate model with updated user information
+    
+    Allows:
+    - Admins/Managers to update any user's information including professional status
+    - Regular users to update their own profile information
     """
-    user_data = user_update.model_dump(exclude_unset=True)
+    # Check if user has permission to update
+    is_admin_or_manager = current_user.get("role") in ["ADMIN", "MANAGER"]
+    is_own_profile = str(user_id) == current_user.get("user_id")
+    
+    if not (is_admin_or_manager or is_own_profile):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Not authorized to update this user"
+        )
+
+    # If regular user, remove restricted fields
+    if not is_admin_or_manager:
+        restricted_fields = {"role", "is_professional"}
+        user_data = {k: v for k, v in user_update.model_dump(exclude_unset=True).items() 
+                    if k not in restricted_fields}
+    else:
+        user_data = user_update.model_dump(exclude_unset=True)
+
+    # Get original user state for comparison
+    original_user = await UserService.get_by_id(db, user_id)
+    if not original_user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+
+    # Update user
     updated_user = await UserService.update(db, user_id, user_data)
     if not updated_user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+
+    # Send notification if professional status was changed
+    if (is_admin_or_manager and 
+        "is_professional" in user_data and 
+        user_data["is_professional"] != original_user.is_professional):
+        await email_service.send_user_email({
+            "name": updated_user.first_name or updated_user.nickname,
+            "email": updated_user.email
+        }, 'professional_status_updated')
 
     return UserResponse.model_construct(
         id=updated_user.id,
@@ -100,6 +144,7 @@ async def update_user(user_id: UUID, user_update: UserUpdate, request: Request, 
         nickname=updated_user.nickname,
         email=updated_user.email,
         role=updated_user.role,
+        is_professional=updated_user.is_professional,
         last_login_at=updated_user.last_login_at,
         profile_picture_url=updated_user.profile_picture_url,
         github_profile_url=updated_user.github_profile_url,
