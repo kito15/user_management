@@ -22,7 +22,7 @@ class EmailService:
         """Test SMTP connection during initialization"""
         try:
             self.smtp_client.test_connection()
-            logger.info("SMTP connection test successful")
+            logger.info("SMTP conclsnection test successful")
         except Exception as e:
             logger.error(f"SMTP connection test failed: {e}")
             raise
