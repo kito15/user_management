@@ -110,3 +110,32 @@ Thank you for registering at OurSite. Please click the following link to verify 
 2024-12-15 21:31:34,776 - app.utils.logger - INFO - Email sent successfully to test@samsung.com
 2024-12-15 21:31:34,777 - app.utils.logger - INFO - Professional status email sent successfully to test@samsung.com
 2024-12-15 21:31:34,778 - app.utils.logger - INFO - Professional status email sent successfully
+2024-12-15 21:41:28,552 - app.utils.logger - INFO - Starting User Management System API
+2024-12-15 21:42:57,144 - app.utils.logger - INFO - Starting User Management System API
+2024-12-15 21:45:42,417 - app.utils.logger - INFO - Starting User Management System API
+2024-12-15 21:51:27,239 - app.utils.logger - INFO - Starting User Management System API
+2024-12-15 21:54:03,444 - app.utils.logger - INFO - Starting User Management System API
+2024-12-15 21:55:46,411 - app.utils.logger - INFO - SMTP connection test successful
+2024-12-15 21:55:46,427 - app.utils.logger - INFO - SMTP connection test successful
+2024-12-15 21:55:46,428 - app.utils.logger - INFO - Updating user 938a028b-8d3c-4f11-aba3-293ec3fc2b6c
+2024-12-15 21:55:46,429 - app.utils.logger - INFO - Update data: {'email': None, 'nickname': None, 'first_name': None, 'last_name': None, 'bio': None, 'profile_picture_url': None, 'linkedin_profile_url': None, 'github_profile_url': None, 'role': None, 'is_professional': True}
+2024-12-15 21:55:46,429 - app.utils.logger - INFO - Current user role: ADMIN
+2024-12-15 21:55:46,434 - app.utils.logger - INFO - Original user professional status: False
+2024-12-15 21:55:46,434 - app.utils.logger - INFO - Original user professional status from DB: False
+2024-12-15 21:55:46,435 - app.utils.logger - INFO - Update data after processing: {'is_professional': True}
+2024-12-15 21:55:46,450 - app.services.user_service - INFO - User 938a028b-8d3c-4f11-aba3-293ec3fc2b6c updated successfully.
+2024-12-15 21:55:46,451 - app.utils.logger - INFO - Updated user professional status: True
+2024-12-15 21:55:46,451 - app.utils.logger - INFO - Checking professional status change:
+2024-12-15 21:55:46,452 - app.utils.logger - INFO - Old status (bool): False
+2024-12-15 21:55:46,452 - app.utils.logger - INFO - New status (bool): True
+2024-12-15 21:55:46,452 - app.utils.logger - INFO - Status changed: True
+2024-12-15 21:55:46,453 - app.utils.logger - INFO - Professional status changed - sending email notification
+2024-12-15 21:55:46,453 - app.utils.logger - INFO - Starting professional status email send for john.doe@example.com
+2024-12-15 21:55:46,453 - app.utils.logger - INFO - Professional status value: True
+2024-12-15 21:55:46,455 - app.utils.logger - INFO - Found template file, reading content
+2024-12-15 21:55:46,458 - app.utils.logger - INFO - Prepared email data: {'name': 'John', 'professional_status': 'professional', 'email': 'john.doe@example.com'}
+2024-12-15 21:55:46,459 - app.utils.logger - INFO - Template variables replaced, sending email
+2024-12-15 21:55:46,790 - app.utils.logger - INFO - Email sent successfully to john.doe@example.com
+2024-12-15 21:55:46,791 - app.utils.logger - INFO - Professional status email sent successfully to john.doe@example.com
+2024-12-15 21:55:46,791 - app.utils.logger - INFO - Professional status email sent successfully
+2024-12-15 21:56:19,442 - app.utils.logger - INFO - Starting User Management System API
