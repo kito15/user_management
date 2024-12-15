@@ -6,6 +6,8 @@ from app.database import Database
 from app.dependencies import get_settings
 from app.routers import user_routes
 from app.utils.api_description import getDescription
+from app.utils.logger import logger
+
 app = FastAPI(
     title="User Management",
     description=getDescription(),
@@ -17,6 +19,7 @@ app = FastAPI(
     },
     license_info={"name": "MIT", "url": "https://opensource.org/licenses/MIT"},
 )
+logger.info("Starting User Management System API")
 # CORS middleware configuration
 # This middleware will enable CORS and allow requests from any origin
 # It can be configured to allow specific methods, headers, and origins

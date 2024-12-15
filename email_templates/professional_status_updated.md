@@ -2,7 +2,7 @@
 
 Dear {name},
 
-Congratulations! Your account has been upgraded to professional status.
+Your account has been updated to {professional_status} status.
 
 This grants you access to additional features and capabilities within our platform.
 

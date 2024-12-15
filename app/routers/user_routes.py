@@ -34,6 +34,8 @@ from app.services.jwt_service import create_access_token
 from app.utils.link_generation import create_user_links, generate_pagination_links
 from app.dependencies import get_settings
 from app.services.email_service import EmailService
+from app.utils.logger import logger  # Add this import
+
 router = APIRouter()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 settings = get_settings()
@@ -99,42 +101,66 @@ async def update_user(
     - Admins/Managers to update any user's information including professional status
     - Regular users to update their own profile information
     """
-    # Check if user has permission to update
+    # Log incoming request data
+    logger.info(f"Updating user {user_id}")
+    logger.info(f"Update data: {user_update.model_dump()}")
+    logger.info(f"Current user role: {current_user.get('role')}")
+
     is_admin_or_manager = current_user.get("role") in ["ADMIN", "MANAGER"]
     is_own_profile = str(user_id) == current_user.get("user_id")
     
     if not (is_admin_or_manager or is_own_profile):
+        logger.warning(f"Unauthorized update attempt for user {user_id}")
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Not authorized to update this user"
         )
 
-    # If regular user, remove restricted fields
-    if not is_admin_or_manager:
-        restricted_fields = {"role", "is_professional"}
-        user_data = {k: v for k, v in user_update.model_dump(exclude_unset=True).items() 
-                    if k not in restricted_fields}
-    else:
-        user_data = user_update.model_dump(exclude_unset=True)
-
-    # Get original user state for comparison
+    # Get original user state
     original_user = await UserService.get_by_id(db, user_id)
     if not original_user:
+        logger.error(f"User {user_id} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+
+    logger.info(f"Original user professional status: {original_user.is_professional}")
+    
+    # Store original professional status
+    original_professional_status = bool(original_user.is_professional)
+    logger.info(f"Original user professional status from DB: {original_professional_status}")
+    
+    # Get update data
+    user_data = user_update.model_dump(exclude_unset=True)
+    logger.info(f"Update data after processing: {user_data}")
 
     # Update user
     updated_user = await UserService.update(db, user_id, user_data)
     if not updated_user:
+        logger.error(f"Failed to update user {user_id}")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
 
-    # Send notification if professional status was changed
-    if (is_admin_or_manager and 
-        "is_professional" in user_data and 
-        user_data["is_professional"] != original_user.is_professional):
-        await email_service.send_user_email({
-            "name": updated_user.first_name or updated_user.nickname,
-            "email": updated_user.email
-        }, 'professional_status_updated')
+    logger.info(f"Updated user professional status: {updated_user.is_professional}")
+
+    # Check professional status change using original stored value
+    if is_admin_or_manager and "is_professional" in user_data:
+        new_status = bool(user_data["is_professional"])
+        
+        logger.info(f"Checking professional status change:")
+        logger.info(f"Old status (bool): {original_professional_status}")
+        logger.info(f"New status (bool): {new_status}")
+        logger.info(f"Status changed: {original_professional_status != new_status}")
+        
+        if original_professional_status != new_status:
+            logger.info("Professional status changed - sending email notification")
+            try:
+                await email_service.send_professional_status_email(
+                    updated_user,
+                    new_status
+                )
+                logger.info("Professional status email sent successfully")
+            except Exception as e:
+                logger.error(f"Failed to send professional status email: {str(e)}")
+        else:
+            logger.info("Professional status unchanged - no email needed")
 
     return UserResponse.model_construct(
         id=updated_user.id,
