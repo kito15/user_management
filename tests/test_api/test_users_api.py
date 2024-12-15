@@ -167,6 +167,23 @@ async def test_update_user_linkedin(async_client, admin_user, admin_token):
     assert response.json()["linkedin_profile_url"] == updated_data["linkedin_profile_url"]
 
 @pytest.mark.asyncio
+async def test_update_user_professional_status(async_client, verified_user, admin_token, email_service):
+    """Test updating user's professional status as admin"""
+    updated_data = {"is_professional": True}
+    headers = {"Authorization": f"Bearer {admin_token}"}
+    response = await async_client.put(f"/users/{verified_user.id}", json=updated_data, headers=headers)
+    assert response.status_code == 200
+    assert response.json()["is_professional"] is True
+
+@pytest.mark.asyncio
+async def test_regular_user_cannot_update_professional_status(async_client, verified_user, user_token):
+    """Test that regular users cannot update professional status"""
+    updated_data = {"is_professional": True}
+    headers = {"Authorization": f"Bearer {user_token}"}
+    response = await async_client.put(f"/users/{verified_user.id}", json=updated_data, headers=headers)
+    assert response.status_code == 403
+
+@pytest.mark.asyncio
 async def test_update_user_profile_fields(async_client, verified_user, user_token):
     """Test updating multiple profile fields at once"""
     profile_data = {

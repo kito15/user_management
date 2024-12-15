@@ -1,0 +1,112 @@
+2024-12-15 20:38:54,354 - app.utils.logger - INFO - Starting User Management System API
+2024-12-15 20:39:35,326 - app.services.user_service - INFO - User 973a06e9-c210-48d3-adb3-4295b59126d8 updated successfully.
+2024-12-15 20:41:49,367 - app.utils.logger - INFO - Starting User Management System API
+2024-12-15 20:42:34,660 - app.utils.logger - INFO - Found template: email_verification
+2024-12-15 20:42:34,662 - app.utils.logger - ERROR - Missing email template: email_templates/password_reset.md
+2024-12-15 20:47:15,215 - app.utils.logger - INFO - Starting User Management System API
+2024-12-15 20:47:52,609 - app.utils.logger - INFO - SMTP connection test successful
+2024-12-15 20:47:52,623 - app.utils.logger - INFO - SMTP connection test successful
+2024-12-15 20:47:52,642 - app.services.user_service - INFO - User 973a06e9-c210-48d3-adb3-4295b59126d8 updated successfully.
+2024-12-15 20:48:54,196 - app.utils.logger - INFO - SMTP connection test successful
+2024-12-15 20:48:54,216 - app.utils.logger - INFO - SMTP connection test successful
+2024-12-15 20:48:54,223 - app.services.user_service - INFO - User 973a06e9-c210-48d3-adb3-4295b59126d8 updated successfully.
+2024-12-15 20:49:28,853 - app.utils.logger - INFO - SMTP connection test successful
+2024-12-15 20:49:28,869 - app.utils.logger - INFO - SMTP connection test successful
+2024-12-15 20:49:28,876 - app.services.user_service - INFO - User 2fa022d7-bf7c-4405-9412-b7ea5699088a updated successfully.
+2024-12-15 20:53:29,563 - app.utils.logger - INFO - Starting User Management System API
+2024-12-15 20:55:41,106 - app.utils.logger - INFO - Starting User Management System API
+2024-12-15 20:57:38,589 - app.utils.logger - INFO - Starting User Management System API
+2024-12-15 20:59:07,795 - app.utils.logger - INFO - Starting User Management System API
+2024-12-15 21:01:16,481 - app.utils.logger - INFO - Starting User Management System API
+2024-12-15 21:05:03,091 - app.utils.logger - INFO - Starting User Management System API
+2024-12-15 21:06:13,755 - app.utils.logger - INFO - Starting User Management System API
+2024-12-15 21:06:47,659 - app.utils.logger - INFO - SMTP connection test successful
+2024-12-15 21:06:47,674 - app.utils.logger - INFO - SMTP connection test successful
+2024-12-15 21:06:47,692 - app.services.user_service - INFO - User 973a06e9-c210-48d3-adb3-4295b59126d8 updated successfully.
+2024-12-15 21:07:50,475 - app.utils.logger - INFO - SMTP connection test successful
+2024-12-15 21:07:50,491 - app.utils.logger - INFO - SMTP connection test successful
+2024-12-15 21:07:50,498 - app.services.user_service - INFO - User 2fa022d7-bf7c-4405-9412-b7ea5699088a updated successfully.
+2024-12-15 21:10:18,385 - app.utils.logger - INFO - Starting User Management System API
+2024-12-15 21:10:45,204 - app.utils.logger - INFO - SMTP connection test successful
+2024-12-15 21:10:45,219 - app.utils.logger - INFO - SMTP connection test successful
+2024-12-15 21:10:45,237 - app.services.user_service - INFO - User 2fa022d7-bf7c-4405-9412-b7ea5699088a updated successfully.
+2024-12-15 21:11:28,968 - app.utils.logger - INFO - SMTP connection test successful
+2024-12-15 21:11:28,984 - app.utils.logger - INFO - SMTP connection test successful
+2024-12-15 21:11:28,991 - app.services.user_service - INFO - User 973a06e9-c210-48d3-adb3-4295b59126d8 updated successfully.
+2024-12-15 21:13:10,762 - app.utils.logger - INFO - Starting User Management System API
+2024-12-15 21:15:13,195 - app.utils.logger - INFO - SMTP connection test successful
+2024-12-15 21:15:13,208 - app.utils.logger - INFO - SMTP connection test successful
+2024-12-15 21:15:55,975 - app.utils.logger - INFO - Starting User Management System API
+2024-12-15 21:18:06,071 - app.utils.logger - INFO - Starting User Management System API
+2024-12-15 21:18:34,746 - app.utils.logger - INFO - SMTP connection test successful
+2024-12-15 21:18:34,761 - app.utils.logger - INFO - SMTP connection test successful
+2024-12-15 21:18:34,762 - app.utils.logger - INFO - Updating user 973a06e9-c210-48d3-adb3-4295b59126d8
+2024-12-15 21:18:34,763 - app.utils.logger - INFO - Update data: {'email': None, 'nickname': None, 'first_name': None, 'last_name': None, 'bio': None, 'profile_picture_url': None, 'linkedin_profile_url': None, 'github_profile_url': None, 'role': None, 'is_professional': True}
+2024-12-15 21:18:34,763 - app.utils.logger - INFO - Current user role: ADMIN
+2024-12-15 21:18:34,767 - app.utils.logger - INFO - Original user professional status: True
+2024-12-15 21:18:34,767 - app.utils.logger - INFO - Update data after processing: {'is_professional': True}
+2024-12-15 21:18:34,783 - app.services.user_service - INFO - User 973a06e9-c210-48d3-adb3-4295b59126d8 updated successfully.
+2024-12-15 21:18:34,784 - app.utils.logger - INFO - Updated user professional status: True
+2024-12-15 21:24:48,548 - app.utils.logger - INFO - Starting User Management System API
+2024-12-15 21:25:38,700 - app.utils.logger - INFO - SMTP connection test successful
+2024-12-15 21:25:38,714 - app.utils.logger - INFO - SMTP connection test successful
+2024-12-15 21:25:38,715 - app.utils.logger - INFO - Updating user 2fa022d7-bf7c-4405-9412-b7ea5699088a
+2024-12-15 21:25:38,715 - app.utils.logger - INFO - Update data: {'email': None, 'nickname': None, 'first_name': None, 'last_name': None, 'bio': None, 'profile_picture_url': None, 'linkedin_profile_url': None, 'github_profile_url': None, 'role': None, 'is_professional': True}
+2024-12-15 21:25:38,716 - app.utils.logger - INFO - Current user role: ADMIN
+2024-12-15 21:25:38,719 - app.utils.logger - INFO - Original user professional status: False
+2024-12-15 21:25:38,719 - app.utils.logger - INFO - Update data after processing: {'is_professional': True}
+2024-12-15 21:25:38,735 - app.services.user_service - INFO - User 2fa022d7-bf7c-4405-9412-b7ea5699088a updated successfully.
+2024-12-15 21:25:38,736 - app.utils.logger - INFO - Updated user professional status: True
+2024-12-15 21:25:38,736 - app.utils.logger - INFO - Checking professional status change:
+2024-12-15 21:25:38,736 - app.utils.logger - INFO - Old status (bool): True
+2024-12-15 21:25:38,737 - app.utils.logger - INFO - New status (bool): True
+2024-12-15 21:25:38,737 - app.utils.logger - INFO - Status changed: False
+2024-12-15 21:25:38,737 - app.utils.logger - INFO - Professional status unchanged - no email needed
+2024-12-15 21:26:42,231 - app.utils.logger - INFO - SMTP connection test successful
+2024-12-15 21:26:42,250 - app.utils.logger - INFO - SMTP connection test successful
+2024-12-15 21:26:42,468 - app.services.user_service - INFO - User Role: UserRole.ANONYMOUS
+2024-12-15 21:26:42,471 - app.utils.logger - INFO - Sending email_verification email to john.doe@example.com
+2024-12-15 21:26:42,471 - app.utils.logger - INFO - Using template: email_templates/email_verification.md
+2024-12-15 21:26:42,475 - app.utils.logger - INFO - Rendered email content: Hello John,
+
+Thank you for registering at OurSite. Please click the following link to verify your em...
+2024-12-15 21:26:42,743 - app.utils.logger - INFO - Email sent successfully to john.doe@example.com
+2024-12-15 21:26:42,743 - app.utils.logger - INFO - Email sent successfully to john.doe@example.com
+2024-12-15 21:27:59,094 - app.utils.logger - INFO - SMTP connection test successful
+2024-12-15 21:27:59,109 - app.utils.logger - INFO - SMTP connection test successful
+2024-12-15 21:27:59,110 - app.utils.logger - INFO - Updating user 938a028b-8d3c-4f11-aba3-293ec3fc2b6c
+2024-12-15 21:27:59,110 - app.utils.logger - INFO - Update data: {'email': None, 'nickname': None, 'first_name': None, 'last_name': None, 'bio': None, 'profile_picture_url': None, 'linkedin_profile_url': None, 'github_profile_url': None, 'role': None, 'is_professional': True}
+2024-12-15 21:27:59,111 - app.utils.logger - INFO - Current user role: ADMIN
+2024-12-15 21:27:59,113 - app.utils.logger - INFO - Original user professional status: False
+2024-12-15 21:27:59,114 - app.utils.logger - INFO - Update data after processing: {'is_professional': True}
+2024-12-15 21:27:59,120 - app.services.user_service - INFO - User 938a028b-8d3c-4f11-aba3-293ec3fc2b6c updated successfully.
+2024-12-15 21:27:59,121 - app.utils.logger - INFO - Updated user professional status: True
+2024-12-15 21:27:59,121 - app.utils.logger - INFO - Checking professional status change:
+2024-12-15 21:27:59,122 - app.utils.logger - INFO - Old status (bool): True
+2024-12-15 21:27:59,122 - app.utils.logger - INFO - New status (bool): True
+2024-12-15 21:27:59,122 - app.utils.logger - INFO - Status changed: False
+2024-12-15 21:27:59,123 - app.utils.logger - INFO - Professional status unchanged - no email needed
+2024-12-15 21:30:19,528 - app.utils.logger - INFO - Starting User Management System API
+2024-12-15 21:31:34,397 - app.utils.logger - INFO - SMTP connection test successful
+2024-12-15 21:31:34,412 - app.utils.logger - INFO - SMTP connection test successful
+2024-12-15 21:31:34,413 - app.utils.logger - INFO - Updating user 973a06e9-c210-48d3-adb3-4295b59126d8
+2024-12-15 21:31:34,413 - app.utils.logger - INFO - Update data: {'email': None, 'nickname': None, 'first_name': None, 'last_name': None, 'bio': None, 'profile_picture_url': None, 'linkedin_profile_url': None, 'github_profile_url': None, 'role': None, 'is_professional': True}
+2024-12-15 21:31:34,413 - app.utils.logger - INFO - Current user role: ADMIN
+2024-12-15 21:31:34,417 - app.utils.logger - INFO - Original user professional status: False
+2024-12-15 21:31:34,417 - app.utils.logger - INFO - Original user professional status from DB: False
+2024-12-15 21:31:34,418 - app.utils.logger - INFO - Update data after processing: {'is_professional': True}
+2024-12-15 21:31:34,433 - app.services.user_service - INFO - User 973a06e9-c210-48d3-adb3-4295b59126d8 updated successfully.
+2024-12-15 21:31:34,433 - app.utils.logger - INFO - Updated user professional status: True
+2024-12-15 21:31:34,434 - app.utils.logger - INFO - Checking professional status change:
+2024-12-15 21:31:34,434 - app.utils.logger - INFO - Old status (bool): False
+2024-12-15 21:31:34,435 - app.utils.logger - INFO - New status (bool): True
+2024-12-15 21:31:34,435 - app.utils.logger - INFO - Status changed: True
+2024-12-15 21:31:34,435 - app.utils.logger - INFO - Professional status changed - sending email notification
+2024-12-15 21:31:34,436 - app.utils.logger - INFO - Starting professional status email send for test@samsung.com
+2024-12-15 21:31:34,437 - app.utils.logger - INFO - Professional status value: True
+2024-12-15 21:31:34,438 - app.utils.logger - INFO - Found template file, reading content
+2024-12-15 21:31:34,441 - app.utils.logger - INFO - Prepared email data: {'name': 'ramon', 'professional_status': 'professional', 'email': 'test@samsung.com'}
+2024-12-15 21:31:34,441 - app.utils.logger - INFO - Template variables replaced, sending email
+2024-12-15 21:31:34,776 - app.utils.logger - INFO - Email sent successfully to test@samsung.com
+2024-12-15 21:31:34,777 - app.utils.logger - INFO - Professional status email sent successfully to test@samsung.com
+2024-12-15 21:31:34,778 - app.utils.logger - INFO - Professional status email sent successfully

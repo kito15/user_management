@@ -1,10 +1,8 @@
 # smtp_client.py
-from builtins import Exception, int, str
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-from settings.config import settings
-import logging
+from app.utils.logger import logger
 
 class SMTPClient:
     def __init__(self, server: str, port: int, username: str, password: str):
@@ -13,19 +11,36 @@ class SMTPClient:
         self.username = username
         self.password = password
 
-    def send_email(self, subject: str, html_content: str, recipient: str):
+    def test_connection(self):
+        """Test SMTP connection"""
         try:
-            message = MIMEMultipart('alternative')
-            message['Subject'] = subject
-            message['From'] = self.username
-            message['To'] = recipient
-            message.attach(MIMEText(html_content, 'html'))
-
             with smtplib.SMTP(self.server, self.port) as server:
-                server.starttls()  # Use TLS
+                server.starttls()
                 server.login(self.username, self.password)
-                server.sendmail(self.username, recipient, message.as_string())
-            logging.info(f"Email sent to {recipient}")
+                logger.info("SMTP connection test successful")
         except Exception as e:
-            logging.error(f"Failed to send email: {str(e)}")
+            logger.error(f"SMTP connection test failed: {e}")
             raise
+
+    def send_email(self, subject: str, content: str, recipient: str):
+        """Send email with error handling and logging"""
+        try:
+            msg = MIMEMultipart('alternative')
+            msg['Subject'] = subject
+            msg['From'] = self.username
+            msg['To'] = recipient
+            
+            html_part = MIMEText(content, 'html')
+            msg.attach(html_part)
+            
+            with smtplib.SMTP(self.server, self.port) as server:
+                server.starttls()
+                server.login(self.username, self.password)
+                server.send_message(msg)
+                
+            logger.info(f"Email sent successfully to {recipient}")
+            
+        except Exception as e:
+            error_msg = f"Failed to send email: {str(e)}"
+            logger.error(error_msg)
+            raise RuntimeError(error_msg) from e

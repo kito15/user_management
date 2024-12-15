@@ -60,6 +60,7 @@ class UserUpdate(UserBase):
     linkedin_profile_url: Optional[str] =Field(None, example="https://linkedin.com/in/johndoe")
     github_profile_url: Optional[str] = Field(None, example="https://github.com/johndoe")
     role: Optional[str] = Field(None, example="AUTHENTICATED")
+    is_professional: Optional[bool] = Field(None, example=True, description="Professional status of the user")
 
     @root_validator(pre=True)
     def check_at_least_one_value(cls, values):
