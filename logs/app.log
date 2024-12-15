@@ -230,3 +230,18 @@ Thank you for registering at OurSite. Please click the following link to verify 
 2024-12-15 22:22:51,425 - app.utils.logger - INFO - Email sent successfully to john.doe@example.com
 2024-12-15 22:22:51,425 - app.utils.logger - INFO - Professional status email sent successfully to john.doe@example.com
 2024-12-15 22:22:51,425 - app.utils.logger - INFO - Professional status email sent successfully
+2024-12-15 22:23:41,122 - app.utils.logger - INFO - Starting User Management System API
+2024-12-15 22:24:04,604 - app.utils.logger - INFO - SMTP connection test successful
+2024-12-15 22:24:04,623 - app.utils.logger - INFO - SMTP conclsnection test successful
+2024-12-15 22:24:04,901 - app.services.user_service - INFO - User Role: UserRole.ANONYMOUS
+2024-12-15 22:24:04,903 - app.utils.logger - INFO - Sending email_verification email to john.doe@example.com
+2024-12-15 22:24:04,903 - app.utils.logger - INFO - Using template: email_templates/email_verification.md
+2024-12-15 22:24:04,907 - app.utils.logger - INFO - Rendered email content: Hello John,
+
+Thank you for registering at OurSite. Please click the following link to verify your em...
+2024-12-15 22:24:05,245 - app.utils.logger - INFO - Email sent successfully to john.doe@example.com
+2024-12-15 22:24:05,246 - app.utils.logger - INFO - Email sent successfully to john.doe@example.com
+2024-12-15 22:38:44,549 - app.utils.logger - INFO - SMTP connection test successful
+2024-12-15 22:38:44,573 - app.utils.logger - INFO - SMTP conclsnection test successful
+2024-12-15 22:40:43,769 - app.utils.logger - INFO - Starting User Management System API
+2024-12-15 22:44:13,683 - app.utils.logger - INFO - Starting User Management System API
