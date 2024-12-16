@@ -15,6 +15,7 @@ from uuid import UUID
 from app.services.email_service import EmailService
 from app.models.user_model import UserRole
 import logging
+from app.models.audit_model import UserProfileAudit
 
 settings = get_settings()
 logger = logging.getLogger(__name__)
@@ -81,25 +82,48 @@ class UserService:
             return None
 
     @classmethod
-    async def update(cls, session: AsyncSession, user_id: UUID, update_data: Dict[str, str]) -> Optional[User]:
+    async def update(cls, session: AsyncSession, user_id: UUID, update_data: Dict[str, str], current_user_id: Optional[UUID] = None) -> Optional[User]:
         try:
-            # validated_data = UserUpdate(**update_data).dict(exclude_unset=True)
-            validated_data = UserUpdate(**update_data).model_dump(exclude_unset=True)
+            # Get current user state before update
+            current_user = await cls.get_by_id(session, user_id)
+            if not current_user:
+                return None
 
+            # Create audit record of current state
+            audit_data = {
+                "email": current_user.email,
+                "first_name": current_user.first_name,
+                "last_name": current_user.last_name,
+                "bio": current_user.bio,
+                "profile_picture_url": current_user.profile_picture_url,
+                "github_profile_url": current_user.github_profile_url,
+                "linkedin_profile_url": current_user.linkedin_profile_url,
+                "nickname": current_user.nickname
+            }
+            
+            # Only create audit record if we have valid UUIDs
+            if isinstance(user_id, UUID):
+                audit_record = UserProfileAudit(
+                    user_id=user_id,
+                    updated_by=current_user_id if isinstance(current_user_id, UUID) else None,
+                    profile_data=audit_data
+                )
+                session.add(audit_record)
+                await session.flush()
+
+            # Continue with the update
+            validated_data = UserUpdate(**update_data).model_dump(exclude_unset=True)
             if 'password' in validated_data:
                 validated_data['hashed_password'] = hash_password(validated_data.pop('password'))
-            query = update(User).where(User.id == user_id).values(**validated_data).execution_options(synchronize_session="fetch")
-            await cls._execute_query(session, query)
-            updated_user = await cls.get_by_id(session, user_id)
-            if updated_user:
-                session.refresh(updated_user)  # Explicitly refresh the updated user object
-                logger.info(f"User {user_id} updated successfully.")
-                return updated_user
-            else:
-                logger.error(f"User {user_id} not found after update attempt.")
-            return None
-        except Exception as e:  # Broad exception handling for debugging
+
+            query = update(User).where(User.id == user_id).values(**validated_data)
+            await session.execute(query)
+            await session.commit()
+            
+            return await cls.get_by_id(session, user_id)
+        except Exception as e:
             logger.error(f"Error during user update: {e}")
+            await session.rollback()
             return None
 
     @classmethod
