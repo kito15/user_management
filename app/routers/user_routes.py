@@ -130,10 +130,19 @@ async def update_user(
     
     # Get update data
     user_data = user_update.model_dump(exclude_unset=True)
-    logger.info(f"Update data after processing: {user_data}")
-
-    # Update user
-    updated_user = await UserService.update(db, user_id, user_data)
+    
+    # Safely convert current_user_id to UUID for admin/manager updates
+    current_user_id = None
+    if is_admin_or_manager and current_user.get("user_id"):
+        try:
+            current_user_id = UUID(str(current_user["user_id"]).replace('-', ''))
+        except ValueError:
+            logger.error(f"Invalid UUID format for current user: {current_user['user_id']}")
+            current_user_id = None
+    
+    # Update user with audit
+    updated_user = await UserService.update(db, user_id, user_data, current_user_id)
+    
     if not updated_user:
         logger.error(f"Failed to update user {user_id}")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
