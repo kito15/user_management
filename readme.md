@@ -26,7 +26,7 @@ The following issues were identified and resolved during the project:
 
 Ten new unit tests were implemented using Pytest to ensure the new functionality works as expected.
 
-1.  **Update LinkedIn URL:** [tests/test_api/test_users_api.py#L153](tests/test_api/test_users_api.py#L163)
+1.  **Update LinkedIn URL:** [tests/test_api/test_users_api.py#L163](tests/test_api/test_users_api.py#L163)
     ```python
     @pytest.mark.asyncio
     async def test_update_user_linkedin(async_client, admin_user, admin_token):
@@ -37,7 +37,7 @@ Ten new unit tests were implemented using Pytest to ensure the new functionality
         assert response.json()["linkedin_profile_url"] == updated_data["linkedin_profile_url"]
     ```
 
-2.  **Update Multiple Profile Fields:** [tests/test_api/test_users_api.py#L159](tests/test_api/test_users_api.py#L159)
+2.  **Update Multiple Profile Fields:** [tests/test_api/test_users_api.py#L215](tests/test_api/test_users_api.py#L215)
     ```python
     @pytest.mark.asyncio
     async def test_update_user_profile_fields(async_client, verified_user, user_token):
@@ -59,7 +59,7 @@ Ten new unit tests were implemented using Pytest to ensure the new functionality
         assert data["github_profile_url"] == profile_data["github_profile_url"]
     ```
 
-3.  **Invalid Profile URLs:** [tests/test_api/test_users_api.py#L174](tests/test_api/test_users_api.py#L235)
+3.  **Invalid Profile URLs:** [tests/test_api/test_users_api.py#L235](tests/test_api/test_users_api.py#L235)
     ```python
     @pytest.mark.asyncio
     async def test_update_user_profile_invalid_urls(async_client, verified_user, user_token):
@@ -71,7 +71,7 @@ Ten new unit tests were implemented using Pytest to ensure the new functionality
         response = await async_client.put(f"/users/{verified_user.id}/profile", json=profile_data, headers=headers)
         assert response.status_code == 422
     ```
-4.  **Unauthorized Profile Update:** [tests/test_api/test_users_api.py#L186](tests/test_api/test_users_api.py#L246)
+4.  **Unauthorized Profile Update:** [tests/test_api/test_users_api.py#L246](tests/test_api/test_users_api.py#L246)
     ```python
     @pytest.mark.asyncio
     async def test_update_user_profile_unauthorized(async_client, verified_user):
@@ -80,7 +80,7 @@ Ten new unit tests were implemented using Pytest to ensure the new functionality
         assert response.status_code == 401
     ```
 
-5.  **Forbidden Profile Update:** [tests/test_api/test_users_api.py#L194](tests/test_api/test_users_api.py#L253)
+5.  **Forbidden Profile Update:** [tests/test_api/test_users_api.py#L253](tests/test_api/test_users_api.py#L253)
     ```python
     @pytest.mark.asyncio
     async def test_update_other_user_profile_forbidden(async_client, verified_user, user_token):
@@ -90,7 +90,7 @@ Ten new unit tests were implemented using Pytest to ensure the new functionality
         response = await async_client.put(f"/users/{other_user_id}/profile", json=profile_data, headers=headers)
         assert response.status_code == 403
     ```
-6.   **Admin Upgrades User to Pro Status** [tests/test_api/test_users_api.py#L202](tests/test_api/test_users_api.py#L171)
+6.   **Admin Upgrades User to Pro Status** [tests/test_api/test_users_api.py#L171](tests/test_api/test_users_api.py#L171)
     ```python
     @pytest.mark.asyncio
     async def test_update_user_professional_status(async_client, verified_user, admin_token, email_service):
@@ -100,7 +100,7 @@ Ten new unit tests were implemented using Pytest to ensure the new functionality
         assert response.status_code == 200
         assert response.json()["is_professional"] is True
     ```
-7.  **Regular User Fails to Update Pro Status** [tests/test_api/test_users_api.py#L207](tests/test_api/test_users_api.py#L217)
+7.  **Regular User Fails to Update Pro Status** [tests/test_api/test_users_api.py#L217](tests/test_api/test_users_api.py#L217)
      ```python
     @pytest.mark.asyncio
     async def test_regular_user_cannot_update_professional_status(async_client, verified_user, user_token):
@@ -110,7 +110,7 @@ Ten new unit tests were implemented using Pytest to ensure the new functionality
         response = await async_client.put(f"/users/{verified_user.id}", json=updated_data, headers=headers)
         assert response.status_code == 403
      ```
-8.  **Downgrade Pro Status** [tests/test_api/test_users_api.py#L225](tests/test_api/test_users_api.py#L180)
+8.  **Downgrade Pro Status** [tests/test_api/test_users_api.py#L180](tests/test_api/test_users_api.py#L180)
     ```python
      @pytest.mark.asyncio
     async def test_update_user_professional_status_downgrade(async_client, verified_user, admin_token, email_service, db_session):
@@ -140,7 +140,7 @@ Ten new unit tests were implemented using Pytest to ensure the new functionality
         assert verified_user.professional_status_updated_at is not None
     ```
 
-9.  **Empty Payload Test** [tests/test_api/test_users_api.py#L248](tests/test_api/test_users_api.py#L287)
+9.  **Empty Payload Test** [tests/test_api/test_users_api.py#L287](tests/test_api/test_users_api.py#L287)
     ```python
     @pytest.mark.asyncio
     async def test_update_user_empty_payload(async_client, verified_user, admin_token):
@@ -158,7 +158,7 @@ Ten new unit tests were implemented using Pytest to ensure the new functionality
         assert data["nickname"] == verified_user.nickname
     ```
 
-10. **Invalid UUID Test** [tests/test_api/test_users_api.py#L263](tests/test_api/test_users_api.py#L302)
+10. **Invalid UUID Test** [tests/test_api/test_users_api.py#L302](tests/test_api/test_users_api.py#L302)
     ```python
      @pytest.mark.asyncio
     async def test_update_user_invalid_uuid(async_client, admin_token):
