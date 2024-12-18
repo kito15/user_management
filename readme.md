@@ -1,4 +1,3 @@
-```markdown
 # User Management System
 
 This project is a user management system built using FastAPI, a modern Python web framework. It provides essential features for user registration, authentication, role-based access control, and profile management. This README provides details about the features implemented for this project, with links to issues and tests.
@@ -319,4 +318,3 @@ Here are some of the key code snippets:
             logger.error(f"Error during email verification: {str(e)}")
             await session.rollback()
             return None
-```
