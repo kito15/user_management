@@ -80,7 +80,7 @@ Ten new unit tests were implemented using Pytest to ensure the new functionality
         assert response.status_code == 401
     ```
 
-5.  **Forbidden Profile Update:** [tests/test_api/test_users_api.py#L194](tests/test_api/test_users_api.py#L194)
+5.  **Forbidden Profile Update:** [tests/test_api/test_users_api.py#L194](tests/test_api/test_users_api.py#L253)
     ```python
     @pytest.mark.asyncio
     async def test_update_other_user_profile_forbidden(async_client, verified_user, user_token):
