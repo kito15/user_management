@@ -6,6 +6,7 @@ from app.models.user_model import User, UserRole
 from app.utils.nickname_gen import generate_nickname
 from app.utils.security import hash_password
 from app.services.jwt_service import decode_token  # Import your FastAPI app
+from uuid import uuid4
 
 # Example of a test function using the async_client fixture
 @pytest.mark.asyncio
@@ -176,6 +177,33 @@ async def test_update_user_professional_status(async_client, verified_user, admi
     assert response.json()["is_professional"] is True
 
 @pytest.mark.asyncio
+async def test_update_user_professional_status_downgrade(async_client, verified_user, admin_token, email_service, db_session):
+    """Test downgrading user's professional status as admin"""
+    # First set the user as professional
+    verified_user.is_professional = True
+    await db_session.commit()
+    await db_session.refresh(verified_user)
+    assert verified_user.is_professional is True
+
+    # Now downgrade the status
+    updated_data = {"is_professional": False}
+    headers = {"Authorization": f"Bearer {admin_token}"}
+    response = await async_client.put(
+        f"/users/{verified_user.id}", 
+        json=updated_data, 
+        headers=headers
+    )
+    
+    # Verify API response
+    assert response.status_code == 200
+    assert response.json()["is_professional"] is False
+
+    # Verify database state
+    await db_session.refresh(verified_user)
+    assert verified_user.is_professional is False
+    assert verified_user.professional_status_updated_at is not None
+
+@pytest.mark.asyncio
 async def test_regular_user_cannot_update_professional_status(async_client, verified_user, user_token):
     """Test that regular users cannot update professional status"""
     updated_data = {"is_professional": True}
@@ -254,3 +282,68 @@ async def test_list_users_unauthorized(async_client, user_token):
         headers={"Authorization": f"Bearer {user_token}"}
     )
     assert response.status_code == 403  # Forbidden, as expected for regular user
+
+@pytest.mark.asyncio
+async def test_update_user_empty_payload(async_client, verified_user, admin_token):
+    """Test that sending an empty update payload returns the original user data"""
+    headers = {"Authorization": f"Bearer {admin_token}"}
+    response = await async_client.put(
+        f"/users/{verified_user.id}",
+        json={},
+        headers=headers
+    )
+    assert response.status_code == 200
+    data = response.json()
+    assert data["id"] == str(verified_user.id)
+    assert data["email"] == verified_user.email
+    assert data["nickname"] == verified_user.nickname
+
+@pytest.mark.asyncio
+async def test_update_user_invalid_uuid(async_client, admin_token):
+    """Test that attempting to update a user with invalid UUID returns 404"""
+    invalid_uuid = "invalid-uuid"
+    headers = {"Authorization": f"Bearer {admin_token}"}
+    response = await async_client.put(
+        f"/users/{invalid_uuid}",
+        json={"email": "test@example.com"},
+        headers=headers
+    )
+    assert response.status_code == 422  # Invalid UUID format
+
+@pytest.mark.asyncio
+async def test_regular_user_cannot_update_role(async_client, verified_user, user_token):
+    """Test that regular users cannot update the role field"""
+    headers = {"Authorization": f"Bearer {user_token}"}
+    updated_data = {"role": UserRole.ADMIN.value}
+    response = await async_client.put(
+        f"/users/{verified_user.id}",
+        json=updated_data,
+        headers=headers
+    )
+    assert response.status_code == 403
+
+@pytest.mark.asyncio
+async def test_admin_can_update_role(async_client, verified_user, admin_token):
+    """Test that admins can update user roles"""
+    headers = {"Authorization": f"Bearer {admin_token}"}
+    updated_data = {"role": UserRole.MANAGER.value}
+    response = await async_client.put(
+        f"/users/{verified_user.id}",
+        json=updated_data,
+        headers=headers
+    )
+    assert response.status_code == 200
+    assert response.json()["role"] == UserRole.MANAGER.value
+
+@pytest.mark.asyncio
+async def test_manager_can_update_role(async_client, verified_user, manager_token):
+    """Test that managers can update user roles"""
+    headers = {"Authorization": f"Bearer {manager_token}"}
+    updated_data = {"role": UserRole.MANAGER.value}
+    response = await async_client.put(
+        f"/users/{verified_user.id}",
+        json=updated_data,
+        headers=headers
+    )
+    assert response.status_code == 200
+    assert response.json()["role"] == UserRole.MANAGER.value
