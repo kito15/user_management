@@ -90,7 +90,7 @@ Ten new unit tests were implemented using Pytest to ensure the new functionality
         response = await async_client.put(f"/users/{other_user_id}/profile", json=profile_data, headers=headers)
         assert response.status_code == 403
     ```
-6.   **Admin Upgrades User to Pro Status** [tests/test_api/test_users_api.py#L171](tests/test_api/test_users_api.py#L171)
+6.   **Admin Upgrades User to Pro Status** [tests/test_api/test_users_api.py#L202](tests/test_api/test_users_api.py#L202)
     ```python
     @pytest.mark.asyncio
     async def test_update_user_professional_status(async_client, verified_user, admin_token, email_service):
